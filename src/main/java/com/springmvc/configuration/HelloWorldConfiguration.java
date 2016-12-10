@@ -2,6 +2,7 @@ package com.springmvc.configuration;
 
 import java.sql.DriverManager;
 
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -51,10 +53,19 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
 		ds.setUrl(url);
 		ds.setUsername(username);
 		ds.setPassword(password);
+		
 		return ds;
 	}
-	
-		@Bean(name="propertyPlaceholderConfigurer")
+	@Bean(name="jndiDataSource")
+	@Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public DataSource getJNDIDataSource(@Value("${jdbc.jndiName}") String jndiName) throws NamingException{
+		JndiTemplate jndiTemplate = new JndiTemplate();
+		DataSource dataSource
+        = (DataSource) jndiTemplate.lookup(jndiName);
+		
+		return dataSource;
+	}
+	@Bean(name="propertyPlaceholderConfigurer")
 	    public PropertyPlaceholderConfigurer getPropertyPlaceholderConfigurer()
 	    {
 	        PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
@@ -64,7 +75,7 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
 	    }
 
 		@Bean(name="jdbctemplate")
-		public JdbcTemplate getJdbcTemplate(@Autowired @Qualifier("dataSource") DataSource ds){
+		public JdbcTemplate getJdbcTemplate(@Autowired @Qualifier("jndiDataSource") DataSource ds){
 			JdbcTemplate jdbcTemplate=new JdbcTemplate(ds);
 			return jdbcTemplate;
 			
