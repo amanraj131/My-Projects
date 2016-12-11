@@ -3,23 +3,22 @@ package com.springmvc.service;
 import java.util.List;
 
 import com.springmvc.model.User;
+import com.springmvc.model.UserBean;
 
 public interface UserService {
     
     User findById(long id);
      
-    User findByName(String name);
      
-    void saveUser(User user);
+   public void saveUser(UserBean user);
      
-    void updateUser(User user);
+   public void updateUser(UserBean user);
      
+   public void deleteUser(UserBean user);
+   
     void deleteUserById(long id);
  
-    List<User> findAllUsers(); 
+    List<UserBean> findAllUsers(); 
      
-    void deleteAllUsers();
-     
-    public boolean isUserExist(User user);
-     
+   
 }

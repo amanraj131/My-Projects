@@ -2,7 +2,7 @@
 
 App.factory('UserService', ['$http', '$q', function($http, $q){
 
-    var REST_SERVICE_URI = 'http://localhost:48080/Spring4MVCAngularJSExample/spring/user/';
+    var REST_SERVICE_URI = '/Spring4MVCexample/spring/ws/user/';
 
     var factory = {
         fetchAllUsers: fetchAllUsers,
@@ -34,6 +34,7 @@ App.factory('UserService', ['$http', '$q', function($http, $q){
             .then(
             function (response) {
                 deferred.resolve(response.data);
+                fetchAllUsers();
             },
             function(errResponse){
                 console.error('Error while creating User');
@@ -46,10 +47,11 @@ App.factory('UserService', ['$http', '$q', function($http, $q){
 
     function updateUser(user, id) {
         var deferred = $q.defer();
-        $http.put(REST_SERVICE_URI+id, user)
+        $http.post(REST_SERVICE_URI+'upd', user)
             .then(
             function (response) {
                 deferred.resolve(response.data);
+                fetchAllUsers();
             },
             function(errResponse){
                 console.error('Error while updating User');
@@ -61,10 +63,11 @@ App.factory('UserService', ['$http', '$q', function($http, $q){
 
     function deleteUser(id) {
         var deferred = $q.defer();
-        $http.delete(REST_SERVICE_URI+id)
+        $http.post(REST_SERVICE_URI+'del/'+id)
             .then(
             function (response) {
                 deferred.resolve(response.data);
+                fetchAllUsers();
             },
             function(errResponse){
                 console.error('Error while deleting User');

@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -39,9 +40,11 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setViewClass(JstlView.class);
+		//viewResolver.setViewClass(JstlView.class);
+		viewResolver.setViewClass(InternalResourceView.class);
 		viewResolver.setPrefix("/WEB-INF/views/");
 		viewResolver.setSuffix(".jsp");
+		//viewResolver.
 		registry.viewResolver(viewResolver);
 	}
 	
@@ -74,7 +77,7 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
 	        return ppc;
 	    }
 
-		@Bean(name="jdbctemplate")
+		@Bean(name="jdbcTemplate")
 		public JdbcTemplate getJdbcTemplate(@Autowired @Qualifier("jndiDataSource") DataSource ds){
 			JdbcTemplate jdbcTemplate=new JdbcTemplate(ds);
 			return jdbcTemplate;
